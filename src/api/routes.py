@@ -8,11 +8,6 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 
 api = Blueprint('api', __name__)
 
-# add JWT manager
-
-api.config["JWT_SECRET_KEY"] = "they_don't_know"
-jwt = JWTManager(api)
-
 @api.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
 
@@ -41,7 +36,7 @@ def handle_signup():
         user = User(email = email, username = username, password = password, is_active = True)
         db.session.add(user)
         db.session.commit()
-        return jsonify({"msg": "New user created successfully."}), 200
+        return jsonify({"msg": "New user created successfully.", "status": "ok"}), 200
     
 @api.route('/login', methods=['POST'])
 def handle_login():
@@ -61,6 +56,8 @@ def handle_login():
 def handle_private_info():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-
-    return jsonify(user.serialize()), 200
+    if user is not None:
+        return jsonify(user.serialize()), 200
+    else: 
+        return jsonify({"msg": "You must be logged in to view this information."})
 
