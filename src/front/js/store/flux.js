@@ -19,6 +19,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			addValue: (value) => {
 				setStore({values: [...getStore().values, value]})
 			},
+			clearKeys: () => {
+				setStore({keys: []})
+			},
+			clearValues: () => {
+				setStore({values: []})
+			},
 			removeToken: () => {
 				setStore({token: null})
 			}

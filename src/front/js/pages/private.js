@@ -17,12 +17,14 @@ export const Private = () => {
                         }
                     })
                 if (resp.ok) {
-                    const resp_json = await resp.json()
-                    await actions.setUserData(resp_json.user)
-                    Object.keys(store.userData).forEach((key) => {
-                        actions.addKey(key)
-                        actions.addValue(store.userData[key])
-                    })
+                    if(store.userData === null) {
+                        const resp_json = await resp.json()
+                        await actions.setUserData(resp_json.user)
+                        Object.keys(store.userData).forEach((key) => {
+                            actions.addKey(key)
+                            actions.addValue(store.userData[key])
+                        })
+                    }
                 }
                 else {
                     alert("You must be logged in to see this page.")
@@ -35,7 +37,7 @@ export const Private = () => {
             }
         }
         setTimeout(() => {
-            asyncFunc() }, 50)
+            asyncFunc() }, 500)
         },[])
 
     return (

@@ -33,7 +33,7 @@ export const Login = () => {
                 console.log(resp_json.token)
                 actions.setToken(resp_json.token)
                 console.log(store.token)
-                sessionStorage.setItem("token", resp_json.token)
+                document.cookie = `token=${resp_json.token}`
                 navigate('/')
             }
             else {
