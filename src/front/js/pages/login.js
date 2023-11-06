@@ -34,7 +34,7 @@ export const Login = () => {
                 actions.setToken(resp_json.token)
                 console.log(store.token)
                 sessionStorage.setItem("token", resp_json.token)
-                navigate('/private')
+                navigate('/')
             }
             else {
                 setFailedLogin(true)
