@@ -28,6 +28,8 @@ def handle_signup():
     existing_email = User.query.filter_by(email=email).first()
     if email is None or username is None or password is None:
         return jsonify({"msg": "Please supply a valid email, username, and password."}), 400
+    elif existing_user is not None and existing_email is not None:
+        return jsonify({"msg": "Username and Email already in use."}), 400
     elif existing_user is not None:
         return jsonify({"msg": "Username already in use."}), 400
     elif existing_email is not None:

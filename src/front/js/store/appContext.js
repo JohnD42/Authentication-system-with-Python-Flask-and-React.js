@@ -23,7 +23,6 @@ const injectContext = PassedComponent => {
 
 		useEffect(() => {
 			const token = sessionStorage.getItem("token")
-			console.log(token)
 			if(token) {
 				state.actions.setToken(token)
 			}

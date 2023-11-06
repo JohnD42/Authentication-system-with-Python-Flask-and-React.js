@@ -1,14 +1,27 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
+	const navigate = useNavigate()
 
 	return (
-		<div className="text-center mt-5">
-			<div>
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
+		<div className="text-center mt-5 container">
+			<div className="row mt-3">
+				<button className="btn btn-primary col-lg-6 mx-auto" onClick={() => navigate('/signup')}>
+					Sign up!
+				</button>
+			<div className="row mt-3"></div>
+				<button className="btn btn-primary col-lg-6 mx-auto" onClick={() => navigate('/login')}>
+					Log in
+				</button>
+			</div>
+			<div className="row mt-3">
+				<button className="btn btn-primary col-lg-6 mx-auto" onClick={() => navigate('/private')}>
+					User info page
+				</button>
 			</div>
 		</div>
 	);

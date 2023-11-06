@@ -66,14 +66,17 @@ export const Signup = () => {
                 navigate('/login')
             }
             else {
-                console.log(resp.json())
+                const resp_json = await resp.json()
+                if(resp_json.msg.includes("Username")) {
+                    setFailedPassword(false)
+                    setFailedUser(true)
+                }
+                if(resp_json.msg.includes("Email")) {
+                    setFailedPassword(false)
+                    setFailedEmail(true)
+                }
             }
-            if(resp.msg.contains("Username already in use")) {
-                setFailedUser(true)
-            }
-            if(resp.msg.contains("Email already in use")) {
-                setFailedEmail(true)
-            }
+            
         }
         else {
             setFailedPassword(true)

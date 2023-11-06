@@ -19,7 +19,14 @@ export const Private = () => {
                 if (resp.ok) {
                     const resp_json = await resp.json()
                     await actions.setUserData(resp_json.user)
-                    clearInterval(interval)
+                    Object.keys(store.userData).forEach((key) => {
+                        actions.addKey(key)
+                        actions.addValue(store.userData[key])
+                    })
+                }
+                else {
+                    alert("You must be logged in to see this page.")
+                    navigate('/login')
                 }
             }
             else {
@@ -27,24 +34,27 @@ export const Private = () => {
                 navigate('/login')
             }
         }
-        const interval = setInterval(() => { 
-            asyncFunc() 
-        }, 500)
-        return () => clearInterval(interval); 
-    },[])
+        setTimeout(() => {
+            asyncFunc() }, 50)
+        },[])
 
     return (
-        <div>
-            {store.userData !== null ?
-                Object.keys(store.userData).forEach(key => {
-                    console.log(key)
-                    return (
-                        <div>
-                            <p>{`${key}: ${store.userData[key]}`} </p>
-                        </div>
-                        )})
-                : ''
-            }
+        <div className="container mx-auto">
+            <div className="row mx-auto p-5">
+                <h1>Super secret private user data!</h1>
+            </div>
+            <div className="row mx-auto p-5">
+                {store.values.length > 0 ? 
+                    store.keys.map((key, ind) => {
+                        return (
+                            <div>
+                                <p>{`${key}: ${store.values[ind]}`}</p>
+                            </div>
+                        )
+                    })
+                    : ''
+                }
+            </div>
         </div>
     )
 
