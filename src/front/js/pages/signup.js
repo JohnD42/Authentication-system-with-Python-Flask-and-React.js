@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
@@ -7,7 +7,12 @@ export const Signup = () => {
     const navigate = useNavigate()
 	const { store, actions } = useContext(Context);
 
+    const [failedPassword, setFailedPassword] = useState(false)
+    const [failedEmail,setFailedEmail] = useState(false)
+    const [failedUser, setFailedUser] = useState(false)
+
     const handleSubmit = async (e) => {
+
         e.preventDefault();
         const email = e.target.elements.inputEmail.value
         const username = e.target.elements.inputUsername.value
@@ -54,32 +59,60 @@ export const Signup = () => {
             }
             )
             if(resp.ok) {
+                setFailedUser(false)
+                setFailedEmail(false)
+                setFailedPassword(false)
                 console.log(await resp.json())
-                navigate('/')
+                navigate('/login')
+            }
+            else {
+                console.log(resp.json())
+            }
+            if(resp.msg.contains("Username already in use")) {
+                setFailedUser(true)
+            }
+            if(resp.msg.contains("Email already in use")) {
+                setFailedEmail(true)
             }
         }
         else {
-            alert("Your password must contain at least one number, one capital letter, one lowercase letter, and one non-alphanumeric character (e.g. @, #, $, !, % etc.), and must be at least 8 characters long.")
+            setFailedPassword(true)
         }
     }
 
 	return (
-		<div className="text-center mt-5">
+		<div className="mt-5">
             <form onSubmit={e => {handleSubmit(e)}}>
-            <div class="form-group">
-                <label for="inputEmail">Email address</label>
-                <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email"/>
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div>
-            <div class="form-group">
-                <label for="inputUsername">Username</label>
-                <input type="text" class="form-control" id="inputUsername" aria-describedby="username" placeholder="Enter username"/>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+                <div className="container">
+                    <div className="form-group col-lg-6 p-2 mx-auto">
+                        <label htmlFor="inputEmail">Email address</label>
+                        <input type="email" className="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email"/>
+                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    {failedEmail ? 
+                        <div className="alert alert-danger">
+                            "Email already in use."
+                        </div> : ''}
+                    <div className="form-group col-lg-6 p-2 mx-auto">
+                        <label htmlFor="inputUsername">Username</label>
+                        <input type="text" className="form-control" id="inputUsername" aria-describedby="username" placeholder="Enter username"/>
+                    </div>
+                    {failedUser ? 
+                        <div className="alert alert-danger">
+                            "Username already in use."
+                        </div> : ''}
+                    <div className="form-group col-lg-6 p-2 mx-auto">
+                        <label htmlFor="inputPassword">Password</label>
+                        <input type="password" className="form-control" id="inputPassword" placeholder="Password"/>
+                    </div>
+                    {failedPassword ? 
+                        <div className="alert alert-danger">
+                            "Your password must contain at least one number, one capital letter, one lowercase letter, and one non-alphanumeric character (e.g. @, #, $, !, % etc.), and must be at least 8 characters long."
+                        </div> : ''}
+                    <div className="col-lg-6 p-2 mx-auto">
+                        <button type="submit" className="btn btn-primary">Submit</button>
+                    </div>
+                </div>
             </form>
 		</div>
 	);

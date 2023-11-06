@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
@@ -6,6 +6,7 @@ import "../../styles/home.css";
 export const Login = () => {
     const navigate = useNavigate()
 	const { store, actions } = useContext(Context);
+    const [failedLogin, setFailedLogin] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,24 +28,39 @@ export const Login = () => {
             }
             )
             if(resp.ok) {
+                setFailedLogin(false)
                 const resp_json = await resp.json()
-                console.log(resp_json)
+                console.log(resp_json.token)
+                actions.setToken(resp_json.token)
+                console.log(store.token)
+                sessionStorage.setItem("token", resp_json.token)
                 navigate('/private')
+            }
+            else {
+                setFailedLogin(true)
             }
         }
 
 	return (
-		<div className="text-center mt-5">
+		<div className="mt-5">
             <form onSubmit={e => {handleSubmit(e)}}>
-            <div class="form-group">
-                <label for="inputUsername">Username</label>
-                <input type="text" class="form-control" id="inputUsername" aria-describedby="username" placeholder="Enter username"/>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+                <div className="container">
+                    <div className="form-group col-lg-6 p-2 mx-auto">
+                        <label htmlFor="inputUsername">Username</label>
+                        <input type="text" className="form-control" id="inputUsername" aria-describedby="username" placeholder="Enter username"/>
+                    </div>
+                    {failedLogin ? 
+                        <div className="alert alert-danger">
+                            "Invalid username or password."
+                        </div> : ''}
+                    <div className="form-group col-lg-6 p-2 mx-auto">
+                        <label htmlFor="inputPassword">Password</label>
+                        <input type="password" className="form-control" id="inputPassword" placeholder="Password"/>
+                    </div>
+                    <div className="col-lg-6 p-2 mx-auto">
+                        <button type="submit" className="btn btn-primary">Submit</button>
+                    </div>
+                </div>
             </form>
 		</div>
 	);

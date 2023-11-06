@@ -57,7 +57,7 @@ def handle_private_info():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     if user is not None:
-        return jsonify(user.serialize()), 200
+        return jsonify({"user": user.serialize(), "status": "ok"}), 200
     else: 
         return jsonify({"msg": "You must be logged in to view this information."})
 
